@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tournoi de pétanque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;600;700&family=Karla:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gravier:#D9D3C6;
+  --gravier-fonce:#C4BCAA;
+  --craie:#FBF9F4;
+  --ardoise:#23261F;
+  --acier:#7B8794;
+  --acier-clair:#B9C2CA;
+  --olivier:#5E6B47;
+  --cochonnet:#C8412F;
+  --trait:rgba(35,38,31,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--gravier);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,.35) 0 1px, transparent 1px),
+    radial-gradient(circle at 63% 42%, rgba(35,38,31,.10) 0 1px, transparent 1px),
+    radial-gradient(circle at 87% 77%, rgba(255,255,255,.30) 0 1px, transparent 1px);
+  background-size:37px 37px, 53px 53px, 71px 71px;
+  color:var(--ardoise);
+  font-family:'Karla',system-ui,sans-serif;font-size:16px;line-height:1.5;
+}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+
+header{padding:44px 0 28px}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--olivier);margin:0 0 10px}
+h1{font-family:'Antonio',sans-serif;font-weight:700;font-size:clamp(46px,12vw,104px);
+  line-height:.86;letter-spacing:-.01em;margin:0;text-transform:uppercase}
+h1 .pointe{color:var(--cochonnet)}
+.sous{margin:14px 0 0;max-width:48ch;color:#4A4E44}
+
+.terrain{position:relative;margin:30px 0 8px;aspect-ratio:16/9;min-height:280px;
+  border:1px solid var(--trait);border-radius:2px;
+  background:repeating-linear-gradient(90deg, transparent 0 22px, rgba(35,38,31,.045) 22px 23px),
+    linear-gradient(180deg,#CFC8B8,#C0B8A4);overflow:hidden}
+.terrain::after{content:"le terrain — plus on gagne, plus on se rapproche du cochonnet";
+  position:absolute;left:12px;bottom:9px;font-family:'IBM Plex Mono',monospace;
+  font-size:10px;letter-spacing:.09em;color:rgba(35,38,31,.5)}
+.cochonnet{position:absolute;left:50%;top:46%;width:16px;height:16px;margin:-8px 0 0 -8px;
+  border-radius:50%;background:radial-gradient(circle at 32% 30%,#E8735E,var(--cochonnet));
+  box-shadow:0 2px 5px rgba(35,38,31,.4)}
+.boule{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.16) 0 4deg, transparent 4deg 9deg),
+    radial-gradient(circle at 34% 28%, #E4E9ED 0%, var(--acier-clair) 34%, var(--acier) 72%, #4E5964 100%);
+  box-shadow:0 4px 9px rgba(35,38,31,.35), inset -3px -4px 8px rgba(0,0,0,.3);
+  transition:left .7s cubic-bezier(.3,1.2,.4,1), top .7s cubic-bezier(.3,1.2,.4,1);
+  display:grid;place-items:center}
+.boule span{font-family:'Antonio',sans-serif;font-size:19px;color:#2A3038;
+  text-shadow:0 1px 0 rgba(255,255,255,.45)}
+.boule.tete{background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.16) 0 4deg, transparent 4deg 9deg),
+    radial-gradient(circle at 34% 28%, #F2D9A8 0%, #D9AE63 40%, #A87B31 78%, #6B4C17 100%)}
+.etiquette{position:absolute;transform:translate(-50%,26px);white-space:nowrap;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;
+  background:rgba(251,249,244,.86);padding:1px 5px;border-radius:2px;
+  transition:left .7s cubic-bezier(.3,1.2,.4,1), top .7s cubic-bezier(.3,1.2,.4,1)}
+
+h2{font-family:'Antonio',sans-serif;font-weight:600;text-transform:uppercase;font-size:26px;
+  letter-spacing:.03em;margin:52px 0 4px;display:flex;align-items:baseline;gap:12px}
+h2::after{content:"";flex:1;height:1px;background:var(--trait)}
+.legende{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#61665A;margin:0 0 16px}
+
+table{width:100%;border-collapse:collapse;background:var(--craie);border:1px solid var(--trait)}
+th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--trait)}
+th{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:#61665A;border-bottom:1px solid var(--ardoise)}
+th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr:last-child td{border-bottom:0}
+td.rang{font-family:'Antonio',sans-serif;font-size:20px;width:44px;text-align:center;color:var(--acier)}
+tbody tr.premier td.rang{color:var(--cochonnet)}
+td.nom{font-weight:600}
+td.v{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:17px}
+td.chiffre{font-family:'IBM Plex Mono',monospace;font-size:14px;color:#4A4E44}
+
+.barre{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+select{font-family:'Karla',sans-serif;font-size:14px;padding:8px 10px;background:var(--craie);
+  border:1px solid var(--trait);border-radius:2px;color:var(--ardoise)}
+.compte{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#61665A}
+
+.partie{display:grid;grid-template-columns:22px 1fr 58px 14px 58px 1fr;align-items:center;gap:8px;
+  background:var(--craie);border:1px solid var(--trait);border-left:3px solid var(--gravier-fonce);
+  padding:9px 12px;margin-bottom:6px}
+.partie.jouee{border-left-color:var(--olivier)}
+.partie.masquee{display:none}
+.num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--acier)}
+.equipe{font-size:14.5px}
+.equipe.d{text-align:right}
+.equipe.gagnante{font-weight:600}
+.equipe.gagnante::before{content:"● ";color:var(--cochonnet);font-size:11px;vertical-align:2px}
+.equipe.d.gagnante::before{content:none}
+.equipe.d.gagnante::after{content:" ●";color:var(--cochonnet);font-size:11px;vertical-align:2px}
+.tiret{text-align:center;color:var(--acier)}
+input[type=number]{width:100%;padding:7px 4px;text-align:center;font-family:'IBM Plex Mono',monospace;
+  font-size:17px;font-weight:600;color:var(--ardoise);background:#EFEBE1;
+  border:1px solid var(--trait);border-radius:2px;-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input:focus-visible{outline:2px solid var(--cochonnet);outline-offset:1px;background:#fff}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+button,.bouton{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;padding:10px 14px;background:var(--ardoise);color:var(--craie);
+  border:1px solid var(--ardoise);border-radius:2px;cursor:pointer;text-decoration:none;display:inline-block}
+button.creux,.bouton.creux{background:transparent;color:var(--ardoise)}
+button:hover,.bouton:hover{background:var(--olivier);border-color:var(--olivier);color:var(--craie)}
+button:focus-visible,.bouton:focus-visible{outline:2px solid var(--cochonnet);outline-offset:2px}
+.aide{margin-top:16px;padding:16px 18px;background:rgba(251,249,244,.6);
+  border:1px dashed var(--trait);font-size:14px}
+.aide ol{margin:8px 0 0;padding-left:20px}
+.aide li{margin-bottom:6px}
+code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:#EFEBE1;padding:1px 4px}
+#message{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--olivier);margin:10px 0 0;min-height:16px}
+.source{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#61665A;margin:10px 0 0}
+.source.souci{color:var(--cochonnet)}
+
+@media (max-width:620px){
+  .partie{grid-template-columns:1fr 46px 10px 46px 1fr;padding:8px;gap:5px}
+  .num{display:none}
+  .equipe{font-size:12.5px}
+  .boule{width:36px;height:36px;margin:-18px 0 0 -18px}
+  .boule span{font-size:15px}
+  .etiquette{font-size:9px;transform:translate(-50%,21px)}
+  .terrain{aspect-ratio:1/1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Aller-retour · 5 équipes · 20 parties</p>
+  <h1>Tournoi de<br>pétanque<span class="pointe">.</span></h1>
+  <p class="sous">Une victoire vaut 1 point. En cas d'égalité, on départage au total des points marqués. Les scores viennent du tableur.</p>
+</header>
+
+<div class="terrain" id="terrain" aria-hidden="true">
+  <div class="cochonnet"></div>
+</div>
+
+<h2>Classement</h2>
+<p class="legende">V = victoires · D = défaites · MARQUÉS = points marqués (départage) · ENCAISSÉS = points encaissés</p>
+<table>
+  <thead>
+    <tr><th></th><th>Équipe</th><th>J</th><th>V</th><th>D</th><th>Marqués</th><th>Encaissés</th><th>Diff.</th></tr>
+  </thead>
+  <tbody id="classement"></tbody>
+</table>
+
+<h2>Les parties</h2>
+<div class="barre">
+  <label for="filtre" class="compte">Voir</label>
+  <select id="filtre"><option value="">toutes les parties</option></select>
+  <span class="compte" id="compte"></span>
+</div>
+<div id="parties"></div>
+<p class="source" id="source"></p>
+
+<div class="actions">
+  <a class="bouton" id="btn-tableur" href="#" target="_blank" rel="noopener">Ouvrir le tableur</a>
+  <button id="btn-csv" class="creux">Copier le CSV</button>
+</div>
+<p id="message" role="status"></p>
+
+<div class="aide">
+  <strong>Changer les scores</strong>
+  <ol>
+    <li>Les scores vivent dans <code>scores.csv</code>. Tapez-les ici pour voir le classement bouger tout de suite, puis <em>Copier le CSV</em> et collez dans le tableur : c'est ce qui compte pour tout le monde.</li>
+    <li>Sur GitHub : ouvrez <code>scores.csv</code>, cliquez sur le crayon, changez les deux dernières colonnes, validez. La page suit dans la minute.</li>
+    <li>Avec Google Sheets (le plus pratique à plusieurs) : importez <code>scores.csv</code> dans une feuille, puis Fichier → Partager → Publier sur le web → format CSV. Copiez le lien obtenu et collez-le dans <code>index.html</code> à la ligne <code>const TABLEUR = "";</code>. Chacun modifie la feuille, la page se met à jour toute seule.</li>
+  </ol>
+</div>
+
+</div>
+
+<script>
+/* ====== Collez ici le lien "Publier sur le web (CSV)" de votre Google Sheet. ====== */
+const TABLEUR = "";
+/* Laissé vide, la page lit le fichier scores.csv posé à côté d'elle.               */
+
+const CSV_SECOURS = `equipe_a,equipe_b,points_a,points_b
+Charlie & Walter,Tanguy & Marguerite,,
+Charlie & Walter,Jeanne & Éric,,
+Charlie & Walter,Penny & Billie,,
+Charlie & Walter,Laszlo,,
+Tanguy & Marguerite,Jeanne & Éric,,
+Tanguy & Marguerite,Penny & Billie,,
+Tanguy & Marguerite,Laszlo,,
+Jeanne & Éric,Penny & Billie,,
+Jeanne & Éric,Laszlo,,
+Penny & Billie,Laszlo,,
+Tanguy & Marguerite,Charlie & Walter,,
+Jeanne & Éric,Charlie & Walter,,
+Penny & Billie,Charlie & Walter,,
+Laszlo,Charlie & Walter,,
+Jeanne & Éric,Tanguy & Marguerite,,
+Penny & Billie,Tanguy & Marguerite,,
+Laszlo,Tanguy & Marguerite,,
+Penny & Billie,Jeanne & Éric,,
+Laszlo,Jeanne & Éric,,
+Laszlo,Penny & Billie,,`;
+
+let PARTIES = [];
+
+function decouper(ligne){
+  const cases=[]; let cur="", guill=false;
+  for(let i=0;i<ligne.length;i++){
+    const c=ligne[i];
+    if(c==='"'){ if(guill && ligne[i+1]==='"'){cur+='"';i++;} else guill=!guill; }
+    else if(c==="," && !guill){ cases.push(cur); cur=""; }
+    else cur+=c;
+  }
+  cases.push(cur); return cases.map(s=>s.trim());
+}
+function lireCSV(texte){
+  const lignes=texte.replace(/\r/g,"").split("\n").filter(l=>l.trim()!=="");
+  lignes.shift(); // en-tête
+  return lignes.map(l=>{
+    const c=decouper(l);
+    const n=v=> v===""||v===undefined ? null : Math.max(0,Math.min(13,parseInt(v,10)||0));
+    return {a:c[0], b:c[1], pa:n(c[2]), pb:n(c[3])};
+  }).filter(p=>p.a && p.b);
+}
+function versCSV(){
+  return "equipe_a,equipe_b,points_a,points_b\n" + PARTIES.map(p=>{
+    const g=s=> s.includes(",") ? '"'+s+'"' : s;
+    return g(p.a)+","+g(p.b)+","+(p.pa===null?"":p.pa)+","+(p.pb===null?"":p.pb);
+  }).join("\n");
+}
+
+/* ---------- chargement ---------- */
+const source=document.getElementById("source");
+const url = TABLEUR || "scores.csv";
+fetch(url + (url.includes("?")?"&":"?") + "t=" + Date.now())
+  .then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
+  .then(t=>{
+    PARTIES=lireCSV(t);
+    source.textContent = "Scores chargés depuis " + (TABLEUR ? "le tableur" : "scores.csv") + " · " + new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    demarrer();
+  })
+  .catch(()=>{
+    PARTIES=lireCSV(CSV_SECOURS);
+    source.className="source souci";
+    source.textContent = "Tableur introuvable — grille vierge affichée. Sur GitHub Pages, vérifiez que scores.csv est bien à côté de index.html.";
+    demarrer();
+  });
+
+/* ---------- rendu ---------- */
+const zone=document.getElementById("parties");
+const filtre=document.getElementById("filtre");
+
+function demarrer(){
+  const equipes=[...new Set(PARTIES.flatMap(p=>[p.a,p.b]))].sort((a,b)=>a.localeCompare(b));
+  equipes.forEach(e=>{
+    const o=document.createElement("option"); o.value=e; o.textContent=e; filtre.appendChild(o);
+  });
+  PARTIES.forEach((p,i)=>{
+    const l=document.createElement("div");
+    l.className="partie"; l.id="p"+i;
+    l.innerHTML='<div class="num">'+String(i+1).padStart(2,"0")+'</div>'+
+      '<div class="equipe g" id="eg'+i+'">'+p.a+'</div>'+
+      '<input type="number" min="0" max="13" inputmode="numeric" aria-label="Points de '+p.a+'" data-i="'+i+'" data-c="pa">'+
+      '<div class="tiret">–</div>'+
+      '<input type="number" min="0" max="13" inputmode="numeric" aria-label="Points de '+p.b+'" data-i="'+i+'" data-c="pb">'+
+      '<div class="equipe d" id="ed'+i+'">'+p.b+'</div>';
+    zone.appendChild(l);
+  });
+  document.querySelectorAll("input[type=number]").forEach(inp=>{
+    const p=PARTIES[+inp.dataset.i], v=p[inp.dataset.c];
+    if(v!==null) inp.value=v;
+    inp.addEventListener("input",()=>{
+      const t=inp.value.trim();
+      p[inp.dataset.c] = t==="" ? null : Math.max(0,Math.min(13,parseInt(t,10)||0));
+      rendre();
+    });
+  });
+  filtre.addEventListener("change",rendre);
+  rendre();
+}
+
+function calcul(){
+  const t={};
+  const ligne=n=> t[n] || (t[n]={nom:n,j:0,v:0,d:0,pour:0,contre:0});
+  PARTIES.forEach(p=>{ ligne(p.a); ligne(p.b); });
+  PARTIES.forEach(p=>{
+    if(p.pa===null||p.pb===null||p.pa===p.pb) return;
+    const A=ligne(p.a), B=ligne(p.b);
+    A.j++;B.j++; A.pour+=p.pa;A.contre+=p.pb; B.pour+=p.pb;B.contre+=p.pa;
+    if(p.pa>p.pb){A.v++;B.d++;} else {B.v++;A.d++;}
+  });
+  return Object.values(t).sort((a,b)=> b.v-a.v || b.pour-a.pour || (b.pour-b.contre)-(a.pour-a.contre) || a.nom.localeCompare(b.nom));
+}
+
+function rendre(){
+  const t=calcul();
+  const tb=document.getElementById("classement"); tb.innerHTML="";
+  t.forEach((e,i)=>{
+    const tr=document.createElement("tr");
+    if(i===0 && e.j>0) tr.className="premier";
+    const diff=e.pour-e.contre;
+    tr.innerHTML='<td class="rang">'+(i+1)+'</td><td class="nom">'+e.nom+'</td>'+
+      '<td class="chiffre">'+e.j+'</td><td class="v">'+e.v+'</td><td class="chiffre">'+e.d+'</td>'+
+      '<td class="chiffre">'+e.pour+'</td><td class="chiffre">'+e.contre+'</td>'+
+      '<td class="chiffre">'+(diff>0?"+":"")+diff+'</td>';
+    tb.appendChild(tr);
+  });
+
+  const f=filtre.value; let visibles=0, jouees=0;
+  PARTIES.forEach((p,i)=>{
+    const l=document.getElementById("p"+i);
+    const montrer = !f || p.a===f || p.b===f;
+    l.classList.toggle("masquee",!montrer);
+    const jouee = p.pa!==null && p.pb!==null;
+    if(montrer){ visibles++; if(jouee) jouees++; }
+    l.classList.toggle("jouee",jouee);
+    document.getElementById("eg"+i).classList.toggle("gagnante", jouee && p.pa>p.pb);
+    document.getElementById("ed"+i).classList.toggle("gagnante", jouee && p.pb>p.pa);
+  });
+  document.getElementById("compte").textContent = jouees+" / "+visibles+" parties jouées";
+
+  const terrain=document.getElementById("terrain");
+  terrain.querySelectorAll(".boule,.etiquette").forEach(n=>n.remove());
+  const joue=t.some(e=>e.j>0);
+  t.slice().sort((a,b)=>a.nom.localeCompare(b.nom)).forEach((e,idx,arr)=>{
+    const r=t.indexOf(e);
+    const ang=(idx/arr.length)*2*Math.PI - Math.PI/2;
+    const ray= joue ? 17 + r*6.5 : 34;
+    const x=50+Math.cos(ang)*ray*1.35, y=46+Math.sin(ang)*ray;
+    const b=document.createElement("div");
+    b.className="boule"+(joue&&r===0?" tete":"");
+    b.style.left=x+"%"; b.style.top=y+"%";
+    b.innerHTML="<span>"+(joue?r+1:"·")+"</span>";
+    const et=document.createElement("div");
+    et.className="etiquette"; et.style.left=x+"%"; et.style.top=y+"%"; et.textContent=e.nom;
+    terrain.append(b,et);
+  });
+}
+
+/* ---------- boutons ---------- */
+const msg=document.getElementById("message");
+function dire(txt){ msg.textContent=txt; setTimeout(()=>{ if(msg.textContent===txt) msg.textContent=""; },4000); }
+document.getElementById("btn-csv").onclick=()=>{
+  const txt=versCSV();
+  navigator.clipboard.writeText(txt).then(()=>dire("CSV copié. Collez-le dans le tableur."))
+    .catch(()=>prompt("Copiez ce texte :",txt));
+};
+const lien=document.getElementById("btn-tableur");
+if(TABLEUR) lien.href=TABLEUR.replace("/pub?","/edit?").split("&")[0];
+else { lien.href="scores.csv"; lien.textContent="Voir scores.csv"; }
+</script>
+</body>
+</html>
