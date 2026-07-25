@@ -334,9 +334,12 @@ function rendre(){
   const joue=t.some(e=>e.j>0);
   t.slice().sort((a,b)=>a.nom.localeCompare(b.nom)).forEach((e,idx,arr)=>{
     const r=t.indexOf(e);
+    // distance au cochonnet : 0 pour le leader, 1 pour le dernier
+    const loin = joue ? (arr.length>1 ? r/(arr.length-1) : 0) : 1;
+    const rx = 15 + 19*loin;   // % de la largeur  → reste entre 16 et 84
+    const ry = 13 + 17*loin;   // % de la hauteur  → reste entre 13 et 73
     const ang=(idx/arr.length)*2*Math.PI - Math.PI/2;
-    const ray= joue ? 17 + r*6.5 : 34;
-    const x=50+Math.cos(ang)*ray*1.35, y=46+Math.sin(ang)*ray;
+    const x=50+Math.cos(ang)*rx, y=43+Math.sin(ang)*ry;
     const b=document.createElement("div");
     b.className="boule"+(joue&&r===0?" tete":"");
     b.style.left=x+"%"; b.style.top=y+"%";
