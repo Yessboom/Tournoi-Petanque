@@ -2,12 +2,12 @@ equipe_a,equipe_b,points_a,points_b
 Charlie & Walter,Tanguy & Marguerite,13,8
 Charlie & Walter,Jeanne & Éric,13,5
 Charlie & Walter,Penny & Billie,13,11
-Charlie & Walter,Laszlo,12,14
+Charlie & Walter,Laszlo,11,13
 Tanguy & Marguerite,Jeanne & Éric,9,13
 Tanguy & Marguerite,Penny & Billie,6,13
 Tanguy & Marguerite,Laszlo,13,9
-Jeanne & Éric,Penny & Billie,,
-Jeanne & Éric,Laszlo,,
+Jeanne & Éric,Penny & Billie,13,12
+Jeanne & Éric,Laszlo,9,13
 Penny & Billie,Laszlo,3,13
 Tanguy & Marguerite,Charlie & Walter,,
 Jeanne & Éric,Charlie & Walter,,
