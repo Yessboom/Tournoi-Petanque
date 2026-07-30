@@ -142,7 +142,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:#EFEBE1;p
 <header>
   <p class="eyebrow">Aller-retour · 5 équipes · 20 parties</p>
   <h1>Tournoi de<br>pétanque<span class="pointe">.</span></h1>
-  <p class="sous">Une victoire vaut 1 point. En cas d'égalité, on départage au total des points marqués. Les scores viennent du tableur.</p>
+  <p class="sous">Une victoire vaut 1 point. En cas d'égalité, on départage à la différence de points. Les scores viennent du tableur.</p>
 </header>
 
 <div class="terrain" id="terrain" aria-hidden="true">
@@ -150,7 +150,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:#EFEBE1;p
 </div>
 
 <h2>Classement</h2>
-<p class="legende">V = victoires · D = défaites · MARQUÉS = points marqués (départage) · ENCAISSÉS = points encaissés</p>
+<p class="legende">V = victoires · D = défaites · DIFF = points marqués moins points encaissés (départage)</p>
 <table>
   <thead>
     <tr><th></th><th>Équipe</th><th>J</th><th>V</th><th>D</th><th>Marqués</th><th>Encaissés</th><th>Diff.</th></tr>
@@ -299,7 +299,7 @@ function calcul(){
     A.j++;B.j++; A.pour+=p.pa;A.contre+=p.pb; B.pour+=p.pb;B.contre+=p.pa;
     if(p.pa>p.pb){A.v++;B.d++;} else {B.v++;A.d++;}
   });
-  return Object.values(t).sort((a,b)=> b.v-a.v || b.pour-a.pour || (b.pour-b.contre)-(a.pour-a.contre) || a.nom.localeCompare(b.nom));
+  return Object.values(t).sort((a,b)=> b.v-a.v || (b.pour-b.contre)-(a.pour-a.contre) || b.pour-a.pour || a.nom.localeCompare(b.nom));
 }
 
 function rendre(){
